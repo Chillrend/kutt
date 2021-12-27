@@ -25,8 +25,7 @@ const Features = () => (
       flexWrap={["wrap", "wrap", "wrap", "nowrap"]}
     >
       <FeaturesItem title="Managing links" icon="edit">
-        Create, protect and delete your links and monitor them with detailed
-        statistics.
+        Testing Modifier
       </FeaturesItem>
       <FeaturesItem title="Custom domain" icon="shuffle">
         Use custom domains for your links. Add or remove them for free.
