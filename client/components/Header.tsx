@@ -44,7 +44,7 @@ const LogoImage = styled.div`
   }
 
   img {
-    width: 18px;
+    width: 28px;
     margin-right: 11px;
   }
 `;

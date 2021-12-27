@@ -163,6 +163,23 @@ const LoginPage = () => {
                 </Button>
               )}
             </Flex>
+            <Flex justifyContent="center">
+              <Button
+                flex="1 1 auto"
+                mr={!DISALLOW_REGISTRATION ? ["8px", 16] : 0}
+                mt={10}
+                height={[44, 56]}
+                maxWidth="100%"
+                onClick={onSubmit("login")}
+              >
+                <Icon
+                  name={loading.login ? "spinner" : "login"}
+                  stroke="white"
+                  mr={2}
+                />
+                Log in dengan SSO PNJ
+              </Button>
+            </Flex>
             <Link href="/reset-password">
               <ALink
                 href="/reset-password"
