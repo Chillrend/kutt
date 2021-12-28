@@ -43,14 +43,14 @@ const ReportPage = () => {
           Report abuse
         </H2>
         <Text mb={3}>
-          Report abuses, malware and phishing links to the below email address
-          or use the form. We will take actions shortly.
+          Laporkan penyalahgunaan, malware, dan tautan phishing ke alamat email
+          di bawah atau gunakan formulir. Kami akan segera mengambil tindakan.
         </Text>
         <Text mb={4}>
           {(publicRuntimeConfig.REPORT_EMAIL || "").replace("@", "[at]")}
         </Text>
         <Text mb={3}>
-          <Span bold>URL containing malware/scam:</Span>
+          <Span bold>URL berisi malware/scam:</Span>
         </Text>
         <Flex
           as="form"
@@ -70,7 +70,7 @@ const ReportPage = () => {
           />
           <Button type="submit" flex="0 0 auto" height={[40, 44]} mt={[3, 0]}>
             {loading && <Icon name={"spinner"} stroke="white" mr={2} />}
-            Send report
+            Kirim
           </Button>
         </Flex>
         <Text fontSize={14} mt={3} color={message.color}>

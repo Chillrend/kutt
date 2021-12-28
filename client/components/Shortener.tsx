@@ -10,11 +10,12 @@ import { Checkbox, Select, TextInput } from "./Input";
 import { Col, RowCenterH, RowCenter } from "./Layout";
 import { useMessage, useCopy } from "../hooks";
 import { removeProtocol } from "../utils";
-import Text, { H1, Span } from "./Text";
+import Text, { H1, H4, Span } from "./Text";
 import { Link } from "../store/links";
 import Animation from "./Animation";
 import { Colors } from "../consts";
 import Icon from "./Icon";
+import { Row } from "redoc";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -40,7 +41,7 @@ const SubmitIconWrapper = styled.div`
 `;
 
 const ShortenedLink = styled(H1)`
-  cursor: "pointer";
+  // cursor: "pointer";
   border-bottom: 1px dotted ${Colors.StatsTotalUnderline};
   cursor: pointer;
 
@@ -72,7 +73,7 @@ const Shortener = () => {
   const [formState, { raw, password, text, select, label }] = useFormState<
     Form
   >(
-    { showAdvanced: false },
+    { showAdvanced: false, expire_in: !isAuthenticated ? "60 days" : "" },
     {
       withIds: true,
       onChange(e, stateValues, nextStateValues) {
@@ -130,9 +131,9 @@ const Shortener = () => {
 
   const title = !link && (
     <H1 fontSize={[25, 27, 32]} light>
-      Shorten your links{" "}
+      Buat link Anda{" "}
       <Span style={{ borderBottom: "2px dotted #999" }} light>
-        shorter
+        pendek!
       </Span>
       .
     </H1>
@@ -184,12 +185,21 @@ const Shortener = () => {
     </Animation>
   );
 
+  const anon_message = link && (
+    <H4>
+      {!isAuthenticated
+        ? "Pengguna anonymous diizinkan membuat link dengan masa berlaku 60 Hari"
+        : ""}
+    </H4>
+  );
+
   return (
     <Col width={800} maxWidth="100%" px={[3]} flex="0 0 auto" mt={4}>
-      <RowCenterH mb={[4, 48]}>
+      <RowCenterH>
         {title}
         {result}
       </RowCenterH>
+      <RowCenterH mb={[4, 48]}>{anon_message}</RowCenterH>
       <Flex
         as="form"
         id="shortenerform"
