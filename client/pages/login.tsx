@@ -46,10 +46,13 @@ const LoginPage = () => {
     if (isAuthenticated) Router.push("/");
   }, [isAuthenticated]);
 
-  function onSubmit(type: "login" | "signup") {
+  function onSubmit(type: "login" | "signup" | "sso") {
     return async e => {
       e.preventDefault();
       const { email, password } = formState.values;
+
+      if (type === "sso") {
+      }
 
       if (loading.login || loading.signup) return null;
 

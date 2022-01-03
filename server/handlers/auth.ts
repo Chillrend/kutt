@@ -1,6 +1,8 @@
 import { differenceInMinutes, addMinutes, subMinutes } from "date-fns";
 import { Handler } from "express";
 import passport from "passport";
+import { Issuer, generators } from "openid-client";
+import cookie from "js-cookie";
 import bcrypt from "bcryptjs";
 import nanoid from "nanoid";
 import uuid from "uuid/v4";
@@ -14,7 +16,7 @@ import query from "../queries";
 import env from "../env";
 
 const authenticate = (
-  type: "jwt" | "local" | "localapikey",
+  type: "jwt" | "local" | "localapikey" | "sso",
   error: string,
   isStrict = true
 ) =>
@@ -59,6 +61,30 @@ export const apikey = authenticate(
   "API key is not correct.",
   false
 );
+
+export const redirectToSSO: Handler = async (req, res, next) => {
+  const pnjIssuer = await Issuer.discover("https://auth.pnj.ac.id");
+  const client = new pnjIssuer.Client({
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    redirect_uris: [process.env.REDIRECT_URI],
+    response_types: ["code"],
+    token_endpoint_auth_method: "client_secret_basic"
+  });
+
+  const code_verifier = generators.codeVerifier();
+  cookie.set("code_verifier", code_verifier);
+
+  const code_challenge = generators.codeChallenge(code_verifier);
+  const redirect_url = client.authorizationUrl({
+    scope: "openid",
+    code_challenge,
+    code_challenge_method: "S256"
+  });
+
+  res.redirect(redirect_url);
+  return next();
+};
 
 export const cooldown: Handler = async (req, res, next) => {
   if (env.DISALLOW_ANONYMOUS_LINKS) return next();
