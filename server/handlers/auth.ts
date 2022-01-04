@@ -202,6 +202,11 @@ export const token: Handler = async (req, res) => {
   return res.status(200).send({ token });
 };
 
+export const tokenWithRedirect: Handler = async (req, res, next) =>{
+  const token = utils.signToken(req.user);
+  res.cookie("token", token, { httpOnly: true });
+};
+
 export const verify: Handler = async (req, res, next) => {
   if (!req.params.verificationToken) return next();
 

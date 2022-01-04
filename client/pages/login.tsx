@@ -36,7 +36,11 @@ const LoginPage = () => {
   const login = useStoreActions(s => s.auth.login);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
-  const [loading, setLoading] = useState({ login: false, signup: false });
+  const [loading, setLoading] = useState({
+    login: false,
+    signup: false,
+    sso: false
+  });
   const [formState, { email, password, label }] = useFormState<{
     email: string;
     password: string;
@@ -50,9 +54,6 @@ const LoginPage = () => {
     return async e => {
       e.preventDefault();
       const { email, password } = formState.values;
-
-      if (type === "sso") {
-      }
 
       if (loading.login || loading.signup) return null;
 
@@ -90,7 +91,11 @@ const LoginPage = () => {
         }
       }
 
-      setLoading({ login: false, signup: false });
+      if (type === "sso") {
+        Router.push("/api/v2/auth/redirect");
+      }
+
+      setLoading({ login: false, signup: false, sso: false });
     };
   }
 
@@ -169,14 +174,13 @@ const LoginPage = () => {
             <Flex justifyContent="center">
               <Button
                 flex="1 1 auto"
-                mr={!DISALLOW_REGISTRATION ? ["8px", 16] : 0}
                 mt={10}
                 height={[44, 56]}
                 maxWidth="100%"
-                onClick={onSubmit("login")}
+                onClick={onSubmit("sso")}
               >
                 <Icon
-                  name={loading.login ? "spinner" : "login"}
+                  name={loading.sso ? "spinner" : "login"}
                   stroke="white"
                   mr={2}
                 />
