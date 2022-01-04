@@ -2,7 +2,6 @@ import { differenceInMinutes, addMinutes, subMinutes } from "date-fns";
 import { Handler } from "express";
 import passport from "passport";
 import { Issuer, generators } from "openid-client";
-import cookie from "js-cookie";
 import bcrypt from "bcryptjs";
 import nanoid from "nanoid";
 import uuid from "uuid/v4";
@@ -14,6 +13,17 @@ import * as redis from "../redis";
 import * as mail from "../mail";
 import query from "../queries";
 import env from "../env";
+
+const client = async () => {
+  const pnjIssuer = await Issuer.discover("https://auth.pnj.ac.id");
+  return new pnjIssuer.Client({
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    redirect_uris: [process.env.REDIRECT_URI],
+    response_types: ["code"],
+    token_endpoint_auth_method: "client_secret_basic"
+  });
+};
 
 const authenticate = (
   type: "jwt" | "local" | "localapikey" | "sso",
@@ -63,27 +73,63 @@ export const apikey = authenticate(
 );
 
 export const redirectToSSO: Handler = async (req, res, next) => {
-  const pnjIssuer = await Issuer.discover("https://auth.pnj.ac.id");
-  const client = new pnjIssuer.Client({
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
-    redirect_uris: [process.env.REDIRECT_URI],
-    response_types: ["code"],
-    token_endpoint_auth_method: "client_secret_basic"
-  });
+  const pnjClient = await client();
 
-  const code_verifier = generators.codeVerifier();
-  cookie.set("code_verifier", code_verifier);
+  const oauth_state = generators.state(16);
+  res.cookie("oauth_state", oauth_state, { httpOnly: true, secure: true });
 
-  const code_challenge = generators.codeChallenge(code_verifier);
-  const redirect_url = client.authorizationUrl({
+  const redirect_url = pnjClient.authorizationUrl({
     scope: "openid",
-    code_challenge,
-    code_challenge_method: "S256"
+    state: oauth_state,
+    code_challenge_method: "S256",
+    response_type: "code"
   });
 
-  res.redirect(redirect_url);
-  return next();
+  return res.redirect(redirect_url);
+};
+
+export const ssoCallback: Handler = async (req, res, next) => {
+  if (req.query.error !== undefined) {
+    return res.status(500);
+  }
+
+  const pnjClient = await client();
+  const params = pnjClient.callbackParams(req);
+
+  if (req.headers.cookie) {
+    const oauth_state = req.cookies["oauth_state"];
+    const tokenSet = await pnjClient.callback(
+      process.env.FULL_DOMAIN_PROTO + "/api/v2/auth/callback",
+      params,
+      { state: oauth_state }
+    );
+    const userinfo = await pnjClient.userinfo(tokenSet.access_token);
+
+    const user = await query.user.find({ email: userinfo.email });
+    if (user) {
+      req.user = {
+        ...user,
+        admin: utils.isAdmin(user.email)
+      };
+      return next();
+    } else {
+      const salt = await bcrypt.genSalt(12);
+      const password = await bcrypt.hash(uuid(), salt);
+
+      const add_user = await query.user.add({
+        email: userinfo.email,
+        password,
+        verified: true
+      });
+      req.user = {
+        ...add_user,
+        admin: utils.isAdmin(user.email)
+      };
+      return next();
+    }
+  } else {
+    return res.status(403);
+  }
 };
 
 export const cooldown: Handler = async (req, res, next) => {

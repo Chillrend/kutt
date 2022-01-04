@@ -25,6 +25,12 @@ router.post(
 
 router.get("/redirect", asyncHandler(auth.redirectToSSO));
 
+router.get(
+  "/callback",
+  asyncHandler(auth.ssoCallback),
+  asyncHandler(auth.token)
+);
+
 router.post("/renew", asyncHandler(auth.jwt), asyncHandler(auth.token));
 
 router.post(

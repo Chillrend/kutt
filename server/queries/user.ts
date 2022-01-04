@@ -31,15 +31,24 @@ export const find = async (match: Partial<User>) => {
 interface Add {
   email: string;
   password: string;
+  verified?: boolean;
+}
+
+interface LooseObject {
+  [key: string]: any;
 }
 
 export const add = async (params: Add, user?: User) => {
-  const data = {
+  const data: LooseObject = {
     email: params.email,
     password: params.password,
-    verification_token: uuid(),
-    verification_expires: addMinutes(new Date(), 60).toISOString()
+    verified: params.verified !== undefined
   };
+
+  if (params.verified === undefined) {
+    data.verification_token = uuid();
+    data.verification_expires = addMinutes(new Date(), 60).toISOString();
+  }
 
   if (user) {
     await knex<User>("users")
