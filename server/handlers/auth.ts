@@ -123,7 +123,7 @@ export const ssoCallback: Handler = async (req, res, next) => {
       });
       req.user = {
         ...add_user,
-        admin: utils.isAdmin(user.email)
+        admin: utils.isAdmin(add_user.email)
       };
       return next();
     }
@@ -202,9 +202,10 @@ export const token: Handler = async (req, res) => {
   return res.status(200).send({ token });
 };
 
-export const tokenWithRedirect: Handler = async (req, res, next) =>{
+export const tokenWithRedirect: Handler = async (req, res, next) => {
   const token = utils.signToken(req.user);
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token_temp", token, { httpOnly: true });
+  return res.redirect("/auth/oidc");
 };
 
 export const verify: Handler = async (req, res, next) => {

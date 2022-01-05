@@ -53,6 +53,11 @@ const LoginPage = () => {
   function onSubmit(type: "login" | "signup" | "sso") {
     return async e => {
       e.preventDefault();
+
+      if (type === "sso") {
+        Router.push("/api/v2/auth/redirect");
+      }
+
       const { email, password } = formState.values;
 
       if (loading.login || loading.signup) return null;
@@ -89,10 +94,6 @@ const LoginPage = () => {
         } catch (error) {
           setError(error.response.data.error);
         }
-      }
-
-      if (type === "sso") {
-        Router.push("/api/v2/auth/redirect");
       }
 
       setLoading({ login: false, signup: false, sso: false });

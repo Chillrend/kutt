@@ -1,4 +1,4 @@
-import { action, Action, thunk, Thunk, computed, Computed } from "easy-peasy";
+import { action, Action, thunk, Thunk, computed, Computed, debug } from "easy-peasy";
 import decode from "jwt-decode";
 import cookie from "js-cookie";
 import axios from "axios";
@@ -9,13 +9,14 @@ import { getAxiosConfig } from "../utils";
 
 export interface Auth {
   domain?: string;
+  checkToken?: string;
   email: string;
   isAdmin: boolean;
   isAuthenticated: Computed<Auth, boolean>;
   add: Action<Auth, TokenPayload>;
   logout: Action<Auth>;
   login: Thunk<Auth, { email: string; password: string }>;
-  loginSSO: Thunk<Auth, { token: string }>;
+  loginSSO: Thunk<Auth, { sso_token: string }>;
   renew: Thunk<Auth>;
 }
 
@@ -43,9 +44,9 @@ export const auth: Auth = {
     actions.add(tokenPayload);
   }),
   loginSSO: thunk(async (actions, payload) => {
-    const { token } = payload;
-    cookie.set("token", token, { expires: 7 });
-    const tokenPayload: TokenPayload = decode(token);
+    const { sso_token } = payload;
+    cookie.set("token", sso_token, { expires: 7 });
+    const tokenPayload: TokenPayload = decode(sso_token);
     actions.add(tokenPayload);
   }),
   renew: thunk(async actions => {
