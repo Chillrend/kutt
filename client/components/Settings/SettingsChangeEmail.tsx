@@ -84,6 +84,11 @@ const SettingsChangeEmail: FC = () => {
             />
           </Col>
         </Flex>
+        <Text mt={10}>
+          Mohon untuk tidak mengubah email Anda jika Anda login menggunakan SSO
+          PNJ. Kami mengaitkan akun s.pnj.ac.id Anda dengan SSO menggunakan
+          Email
+        </Text>
         <Button type="submit" color="blue" mt={[24, 3]} disabled={loading}>
           <Icon name={loading ? "spinner" : "refresh"} mr={2} stroke="white" />
           {loading ? "Sending..." : "Update"}
