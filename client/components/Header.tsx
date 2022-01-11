@@ -125,20 +125,13 @@ const Header: FC = () => {
             p={0}
           >
             <Li>
-              <ALink
-                href="//github.com/thedevs-network/kutt"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="GitHub"
-                fontSize={[14, 16]}
-              >
-                GitHub
-              </ALink>
-            </Li>
-            <Li>
               <Link href="/report">
-                <ALink href="/report" title="Report abuse" fontSize={[14, 16]}>
-                  Report
+                <ALink
+                  href="/report"
+                  title="Report URL Scam / Malware"
+                  fontSize={[14, 16]}
+                >
+                  Report URL Scam / Malware
                 </ALink>
               </Link>
             </Li>
@@ -155,8 +148,12 @@ const Header: FC = () => {
         <Li>
           <Flex display={["flex", "none"]}>
             <Link href="/report">
-              <ALink href="/report" title="Report" fontSize={[14, 16]}>
-                Report
+              <ALink
+                href="/report"
+                title="Report URL Scam / Malware"
+                fontSize={[14, 16]}
+              >
+                Report URL Scam / Malware
               </ALink>
             </Link>
           </Flex>

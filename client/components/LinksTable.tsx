@@ -519,7 +519,9 @@ const LinksTable: FC = () => {
   const isAdmin = useStoreState(s => s.auth.isAdmin);
   const links = useStoreState(s => s.links);
   const { get, remove } = useStoreActions(s => s.links);
-  const [tableMessage, setTableMessage] = useState("No links to show.");
+  const [tableMessage, setTableMessage] = useState(
+    "Tidak ada URL untuk ditampilkan."
+  );
   const [deleteModal, setDeleteModal] = useState(-1);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteMessage, setDeleteMessage] = useMessage();
@@ -611,7 +613,7 @@ const LinksTable: FC = () => {
   return (
     <Col width={1200} maxWidth="95%" margin="40px 0 120px" my={6}>
       <H2 mb={3} light>
-        Recent shortened links.
+        URL singkat terbaru.
       </H2>
       <Table scrollWidth="800px">
         <thead>
@@ -620,7 +622,7 @@ const LinksTable: FC = () => {
               <Flex as="form" onSubmit={onSubmit}>
                 <TextInput
                   {...text("search")}
-                  placeholder="Search..."
+                  placeholder="Cari URL..."
                   height={[30, 32]}
                   placeholderSize={[13, 13, 13, 13]}
                   fontSize={[14]}
@@ -635,7 +637,7 @@ const LinksTable: FC = () => {
                   <Checkbox
                     {...label("all")}
                     {...checkbox("all")}
-                    label="All links"
+                    label="Seluruh link"
                     ml={3}
                     fontSize={[14, 15]}
                     width={[15, 16]}
@@ -647,9 +649,9 @@ const LinksTable: FC = () => {
             {Nav}
           </Tr>
           <Tr>
-            <Th {...ogLinkFlex}>Original URL</Th>
-            <Th {...createdFlex}>Created</Th>
-            <Th {...shortLinkFlex}>Short URL</Th>
+            <Th {...ogLinkFlex}>Target URL</Th>
+            <Th {...createdFlex}>Tgl. Dibuat</Th>
+            <Th {...shortLinkFlex}>URL Pendek</Th>
             <Th {...viewsFlex}>Views</Th>
             <Th {...actionsFlex}></Th>
           </Tr>
@@ -659,7 +661,7 @@ const LinksTable: FC = () => {
             <Tr width={1} justifyContent="center">
               <Td flex="1 1 auto" justifyContent="center">
                 <Text fontSize={18} light>
-                  {links.loading ? "Loading links..." : tableMessage}
+                  {links.loading ? "Loading link..." : tableMessage}
                 </Text>
               </Td>
             </Tr>
@@ -691,7 +693,7 @@ const LinksTable: FC = () => {
               Delete link?
             </H2>
             <Text textAlign="center">
-              Are you sure do you want to delete the link{" "}
+              Apakah Anda yakin ingin menghapus link{" "}
               <Span bold>"{removeProtocol(linkToDelete.link)}"</Span>?
             </Text>
             <Flex justifyContent="center" mt={44}>

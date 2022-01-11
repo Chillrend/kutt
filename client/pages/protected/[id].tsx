@@ -28,7 +28,7 @@ const ProtectedPage: NextPage<Props> = () => {
     const { password } = formState.values;
 
     if (!password) {
-      return setError("Password must not be empty.");
+      return setError("Password tidak boleh kosong.");
     }
 
     setError("");
@@ -51,14 +51,14 @@ const ProtectedPage: NextPage<Props> = () => {
     <AppWrapper>
       {!router.query.id ? (
         <H2 my={4} light>
-          404 | Link could not be found.
+          404 | Link tidak dapat ditemukan.
         </H2>
       ) : (
         <Col width={500} maxWidth="97%">
           <H2 my={3} bold>
             Protected link
           </H2>
-          <Text mb={4}>Enter the password to be redirected to the link.</Text>
+          <Text mb={4}>Masukkan password untuk menuju ke link.</Text>
           <Flex
             as="form"
             alignItems="center"

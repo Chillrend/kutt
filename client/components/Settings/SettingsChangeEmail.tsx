@@ -37,7 +37,9 @@ const SettingsChangeEmail: FC = () => {
       );
       setMessage(res.data.message, "green");
     } catch (error) {
-      setMessage(error?.response?.data?.error || "Couldn't send email.");
+      setMessage(
+        error?.response?.data?.error || "Tidak dapat mengirim email konfirmasi."
+      );
     }
     setLoading(false);
   };
@@ -45,7 +47,7 @@ const SettingsChangeEmail: FC = () => {
   return (
     <Col alignItems="flex-start" maxWidth="100%">
       <H2 mb={4} bold>
-        Change email address
+        Ganti alamat email
       </H2>
       <Col alignItems="flex-start" onSubmit={onSubmit} width={1} as="form">
         <Flex width={1} flexDirection={["column", "row"]}>
@@ -74,7 +76,7 @@ const SettingsChangeEmail: FC = () => {
               fontSize={[15, 16]}
               bold
             >
-              New email address:
+              Alamat email baru:
             </Text>
             <TextInput
               {...email("changeemailaddress")}

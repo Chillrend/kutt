@@ -135,7 +135,6 @@ const Shortener = () => {
       <Span style={{ borderBottom: "2px dotted #999" }} light>
         pendek!
       </Span>
-      .
     </H1>
   );
 
@@ -211,7 +210,7 @@ const Shortener = () => {
       >
         <TextInput
           {...text("target")}
-          placeholder="Paste your long URL"
+          placeholder="Tempel URL panjang Anda"
           placeholderSize={[16, 17, 18]}
           fontSize={[18, 20, 22]}
           aria-label="target"
@@ -253,7 +252,7 @@ const Shortener = () => {
           }
         })}
         checked={formState.values.showAdvanced}
-        label="Show advanced options"
+        label="Tampilkan opsi tambahan"
         mt={[3, 24]}
         alignSelf="flex-start"
       />
@@ -299,7 +298,7 @@ const Shortener = () => {
               </Text>
               <TextInput
                 {...text("customurl")}
-                placeholder="Custom address..."
+                placeholder="Custom URL..."
                 autocomplete="off"
                 data-lpignore
                 pl={[3, 24]}
@@ -343,11 +342,11 @@ const Shortener = () => {
                 mb={2}
                 bold
               >
-                Expire in:
+                Kedaluwarsa dalam:
               </Text>
               <TextInput
                 {...text("expire_in")}
-                placeholder="2 minutes/hours/days"
+                placeholder="2 m/h/d(minutes/hour/days)"
                 data-lpignore
                 pl={[3, 24]}
                 pr={[3, 24]}
@@ -366,11 +365,11 @@ const Shortener = () => {
                 mb={2}
                 bold
               >
-                Description:
+                Deskripsi:
               </Text>
               <TextInput
                 {...text("description")}
-                placeholder="Description"
+                placeholder="Deskripsi"
                 data-lpignore
                 pl={[3, 24]}
                 pr={[3, 24]}

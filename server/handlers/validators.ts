@@ -35,7 +35,8 @@ export const preservedUrls = [
   "privacy",
   "protected",
   "report",
-  "pricing"
+  "pricing",
+  "auth"
 ];
 
 export const checkUser = (value, { req }) => !!req.user;
@@ -43,45 +44,45 @@ export const checkUser = (value, { req }) => !!req.user;
 export const createLink = [
   body("target")
     .exists({ checkNull: true, checkFalsy: true })
-    .withMessage("Target is missing.")
+    .withMessage("Target URL tidak ditemukan.")
     .isString()
     .trim()
     .isLength({ min: 1, max: 2040 })
-    .withMessage("Maximum URL length is 2040.")
+    .withMessage("Panjang URL maksimal 2040 karakter.")
     .customSanitizer(addProtocol)
     .custom(
       value =>
         urlRegex({ exact: true, strict: false }).test(value) ||
         /^(?!https?)(\w+):\/\//.test(value)
     )
-    .withMessage("URL is not valid.")
+    .withMessage("URL tidak valid.")
     .custom(value => removeWww(URL.parse(value).host) !== env.DEFAULT_DOMAIN)
-    .withMessage(`${env.DEFAULT_DOMAIN} URLs are not allowed.`),
+    .withMessage(`${env.DEFAULT_DOMAIN} URL tidak diperbolehkan.`),
   body("password")
     .optional({ nullable: true, checkFalsy: true })
     .custom(checkUser)
-    .withMessage("Only users can use this field.")
+    .withMessage("Hanya user yang dapat menggunakan opsi ini.")
     .isString()
     .isLength({ min: 3, max: 64 })
-    .withMessage("Password length must be between 3 and 64."),
+    .withMessage("Panjang password harus diantara 3 dan 64 karakter."),
   body("customurl")
     .optional({ nullable: true, checkFalsy: true })
     .custom(checkUser)
-    .withMessage("Only users can use this field.")
+    .withMessage("Hanya user yang dapat menggunakan opsi ini.")
     .isString()
     .trim()
     .isLength({ min: 1, max: 64 })
-    .withMessage("Custom URL length must be between 1 and 64.")
+    .withMessage("Panjang Custom URL harus diantara 1 dan 64 karakter.")
     .custom(value => /^[a-zA-Z0-9-_]+$/g.test(value))
-    .withMessage("Custom URL is not valid")
+    .withMessage("Custom URL Tidak Valid")
     .custom(value => !preservedUrls.some(url => url.toLowerCase() === value))
-    .withMessage("You can't use this custom URL."),
+    .withMessage("Amda tidak dapat menggunakan Custom URL ini."),
   body("reuse")
     .optional({ nullable: true })
     .custom(checkUser)
-    .withMessage("Only users can use this field.")
+    .withMessage("Hanya user yang dapat menggunakan opsi ini.")
     .isBoolean()
-    .withMessage("Reuse must be boolean."),
+    .withMessage("Reuse harus berupa boolean."),
   body("description")
     .optional({ nullable: true, checkFalsy: true })
     .isString()
@@ -99,17 +100,19 @@ export const createLink = [
         return false;
       }
     })
-    .withMessage("Expire format is invalid. Valid examples: 1m, 8h, 42 days.")
+    .withMessage(
+      "Format expire tidak valid. Contoh valid: 1m (1 menit), 8h (8jam), 42d (42 Hari).."
+    )
     .customSanitizer(ms)
     .custom(value => value >= ms("1m"))
-    .withMessage("Minimum expire time should be '1 minute'.")
+    .withMessage("Minimal waktu expire harus lebih/sama dengan '1 minute'.")
     .customSanitizer(value => addMilliseconds(new Date(), value).toISOString()),
   body("domain")
     .optional({ nullable: true, checkFalsy: true })
     .custom(checkUser)
-    .withMessage("Only users can use this field.")
+    .withMessage("Hanya user yang dapat menggunakan opsi ini.")
     .isString()
-    .withMessage("Domain should be string.")
+    .withMessage("Domain harus berupa string.")
     .customSanitizer(value => value.toLowerCase())
     .customSanitizer(value => removeWww(URL.parse(value).hostname || value))
     .custom(async (address, { req }) => {
@@ -126,7 +129,7 @@ export const createLink = [
 
       if (!domain) return Promise.reject();
     })
-    .withMessage("You can't use this domain.")
+    .withMessage("Anda tidak dapat menggunakan domain ini.")
 ];
 
 export const editLink = [
@@ -135,26 +138,26 @@ export const editLink = [
     .isString()
     .trim()
     .isLength({ min: 1, max: 2040 })
-    .withMessage("Maximum URL length is 2040.")
+    .withMessage("Panjang URL maksimal 2040 karakter.")
     .customSanitizer(addProtocol)
     .custom(
       value =>
         urlRegex({ exact: true, strict: false }).test(value) ||
         /^(?!https?)(\w+):\/\//.test(value)
     )
-    .withMessage("URL is not valid.")
+    .withMessage("URL tidak valid.")
     .custom(value => removeWww(URL.parse(value).host) !== env.DEFAULT_DOMAIN)
-    .withMessage(`${env.DEFAULT_DOMAIN} URLs are not allowed.`),
+    .withMessage(`${env.DEFAULT_DOMAIN} URL tidak diperbolehkan.`),
   body("address")
     .optional({ checkFalsy: true, nullable: true })
     .isString()
     .trim()
     .isLength({ min: 1, max: 64 })
-    .withMessage("Custom URL length must be between 1 and 64.")
+    .withMessage("Panjang Custom URL harus diantara 1 dan 64 karakter.")
     .custom(value => /^[a-zA-Z0-9-_]+$/g.test(value))
-    .withMessage("Custom URL is not valid")
+    .withMessage("Custom URL tidak valid")
     .custom(value => !preservedUrls.some(url => url.toLowerCase() === value))
-    .withMessage("You can't use this custom URL."),
+    .withMessage("Anda tidak dapat menggunakan custom URL ini."),
   body("expire_in")
     .optional({ nullable: true, checkFalsy: true })
     .isString()
@@ -166,10 +169,12 @@ export const editLink = [
         return false;
       }
     })
-    .withMessage("Expire format is invalid. Valid examples: 1m, 8h, 42 days.")
+    .withMessage(
+      "Format expire tidak valid. Contoh valid: 1m (1 menit), 8h (8jam), 42d (42 Hari).."
+    )
     .customSanitizer(ms)
     .custom(value => value >= ms("1m"))
-    .withMessage("Minimum expire time should be '1 minute'.")
+    .withMessage("Minimal waktu expire harus lebih/sama dengan '1 minute'.")
     .customSanitizer(value => addMilliseconds(new Date(), value).toISOString()),
   body("description")
     .optional({ nullable: true, checkFalsy: true })
@@ -177,27 +182,27 @@ export const editLink = [
     .trim()
     .isLength({ min: 0, max: 2040 })
     .withMessage("Description length must be between 0 and 2040."),
-  param("id", "ID is invalid.")
+  param("id", "ID salah.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 36, max: 36 })
 ];
 
 export const redirectProtected = [
-  body("password", "Password is invalid.")
+  body("password", "Password salah.")
     .exists({ checkFalsy: true, checkNull: true })
     .isString()
     .isLength({ min: 3, max: 64 })
-    .withMessage("Password length must be between 3 and 64."),
-  param("id", "ID is invalid.")
+    .withMessage("Panjang password harus diantara 3 dan 64 karakter."),
+  param("id", "ID salah.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 36, max: 36 })
 ];
 
 export const addDomain = [
-  body("address", "Domain is not valid")
+  body("address", "Domain tidak valid")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 3, max: 64 })
-    .withMessage("Domain length must be between 3 and 64.")
+    .withMessage("Panjang domain harus diantara 3 dan 64 karakter.")
     .trim()
     .customSanitizer(value => {
       const parsed = URL.parse(value);
@@ -205,12 +210,12 @@ export const addDomain = [
     })
     .custom(value => urlRegex({ exact: true, strict: false }).test(value))
     .custom(value => value !== env.DEFAULT_DOMAIN)
-    .withMessage("You can't use the default domain.")
+    .withMessage("Anda tidak dapat menggunakan domain default.")
     .custom(async value => {
       const domain = await query.domain.find({ address: value });
       if (domain?.user_id || domain?.banned) return Promise.reject();
     })
-    .withMessage("You can't add this domain."),
+    .withMessage("Anda tidak dapat menambahkan domain ini."),
   body("homepage")
     .optional({ checkFalsy: true, nullable: true })
     .customSanitizer(addProtocol)
@@ -219,7 +224,7 @@ export const addDomain = [
 ];
 
 export const removeDomain = [
-  param("id", "ID is invalid.")
+  param("id", "ID salah.")
     .exists({
       checkFalsy: true,
       checkNull: true
@@ -228,7 +233,7 @@ export const removeDomain = [
 ];
 
 export const deleteLink = [
-  param("id", "ID is invalid.")
+  param("id", "ID salah.")
     .exists({
       checkFalsy: true,
       checkNull: true
@@ -237,7 +242,7 @@ export const deleteLink = [
 ];
 
 export const reportLink = [
-  body("link", "No link has been provided.")
+  body("link", "Tidak ada link yang akan direport.")
     .exists({
       checkFalsy: true,
       checkNull: true
@@ -246,11 +251,11 @@ export const reportLink = [
     .custom(
       value => removeWww(URL.parse(value).hostname) === env.DEFAULT_DOMAIN
     )
-    .withMessage(`You can only report a ${env.DEFAULT_DOMAIN} link.`)
+    .withMessage(`Anda hanya dapat melaporkan link dari ${env.DEFAULT_DOMAIN}.`)
 ];
 
 export const banLink = [
-  param("id", "ID is invalid.")
+  param("id", "ID salah.")
     .exists({
       checkFalsy: true,
       checkNull: true
@@ -279,7 +284,7 @@ export const banLink = [
 ];
 
 export const getStats = [
-  param("id", "ID is invalid.")
+  param("id", "ID salah.")
     .exists({
       checkFalsy: true,
       checkNull: true
@@ -288,16 +293,16 @@ export const getStats = [
 ];
 
 export const signup = [
-  body("password", "Password is not valid.")
+  body("password", "Password tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 8, max: 64 })
-    .withMessage("Password length must be between 8 and 64."),
-  body("email", "Email is not valid.")
+    .withMessage("Panjang password harus diantara 8 dan 64 karakter."),
+  body("email", "Email tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .trim()
     .isEmail()
     .isLength({ min: 0, max: 255 })
-    .withMessage("Email length must be max 255.")
+    .withMessage("Panjang email maksimal 255 karakter.")
     .custom(async (value, { req }) => {
       const user = await query.user.find({ email: value });
 
@@ -307,53 +312,53 @@ export const signup = [
 
       if (user?.verified) return Promise.reject();
     })
-    .withMessage("You can't use this email address.")
+    .withMessage("Anda tidak dapat menggunakan email ini.")
 ];
 
 export const login = [
-  body("password", "Password is not valid.")
+  body("password", "Password tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 8, max: 64 })
-    .withMessage("Password length must be between 8 and 64."),
-  body("email", "Email is not valid.")
+    .withMessage("Panjang password harus diantara 8 dan 64 karakter."),
+  body("email", "Email tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .trim()
     .isEmail()
     .isLength({ min: 0, max: 255 })
-    .withMessage("Email length must be max 255.")
+    .withMessage("Panjang email maksimal 255 karakter.")
 ];
 
 export const changePassword = [
-  body("password", "Password is not valid.")
+  body("password", "Password tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 8, max: 64 })
-    .withMessage("Password length must be between 8 and 64.")
+    .withMessage("Panjang password harus diantara 8 dan 64 karakter.")
 ];
 
 export const resetPasswordRequest = [
-  body("email", "Email is not valid.")
+  body("email", "Email tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .trim()
     .isEmail()
     .isLength({ min: 0, max: 255 })
-    .withMessage("Email length must be max 255."),
-  body("password", "Password is not valid.")
+    .withMessage("Panjang email maksimal 255 karakter."),
+  body("password", "Password tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 8, max: 64 })
-    .withMessage("Password length must be between 8 and 64.")
+    .withMessage("Panjang password harus diantara 8 dan 64 karakter.")
 ];
 
 export const resetEmailRequest = [
-  body("email", "Email is not valid.")
+  body("email", "Email tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .trim()
     .isEmail()
     .isLength({ min: 0, max: 255 })
-    .withMessage("Email length must be max 255.")
+    .withMessage("Panjang email maksimal 255 karakter.")
 ];
 
 export const deleteUser = [
-  body("password", "Password is not valid.")
+  body("password", "Password tidak valid.")
     .exists({ checkFalsy: true, checkNull: true })
     .isLength({ min: 8, max: 64 })
     .custom(async (password, { req }) => {
@@ -371,7 +376,9 @@ export const cooldown = (user: User) => {
   );
 
   if (hasCooldownNow) {
-    throw new CustomError("Cooldown because of a malware URL. Wait 12h");
+    throw new CustomError(
+      "Anda telah mencoba mendaftarkan URL yang terdaftar sebagai Malware. Silahkan tunggu 12 jam untuk mendaftarkan URL kembali"
+    );
   }
 };
 
@@ -418,12 +425,16 @@ export const malware = async (user: User, target: string) => {
     // Ban if too many cooldowns
     if (updatedUser.cooldowns.length > 2) {
       await query.user.update({ id: user.id }, { banned: true });
-      throw new CustomError("Too much malware requests. You are now banned.");
+      throw new CustomError(
+        "Anda telah mencoba mendaftarkan URL Malware terlalu banyak, akun Anda telah kami ban."
+      );
     }
   }
 
   throw new CustomError(
-    user ? "Malware detected! Cooldown for 12h." : "Malware detected!"
+    user
+      ? "URL Malware terdeteksi, akun Anda kami suspend selama 12 jam."
+      : "URL Malware terdeteksi"
   );
 };
 
@@ -437,7 +448,7 @@ export const linksCount = async (user?: User) => {
 
   if (count > env.USER_LIMIT_PER_DAY) {
     throw new CustomError(
-      `You have reached your daily limit (${env.USER_LIMIT_PER_DAY}). Please wait 24h.`
+      `Anda telah mencapai batas pendaftaran link selama 24 jam(${env.USER_LIMIT_PER_DAY}). harap menunggu hari berikutnya.`
     );
   }
 };
@@ -449,7 +460,10 @@ export const bannedDomain = async (domain: string) => {
   });
 
   if (isBanned) {
-    throw new CustomError("URL is containing malware/scam.", 400);
+    throw new CustomError(
+      "URL telah kami ban karena mengandung malware/scam.",
+      400
+    );
   }
 };
 
@@ -470,6 +484,9 @@ export const bannedHost = async (domain: string) => {
   }
 
   if (isBanned) {
-    throw new CustomError("URL is containing malware/scam.", 400);
+    throw new CustomError(
+      "UURL telah kami ban karena mengandung malware/scam.",
+      400
+    );
   }
 };

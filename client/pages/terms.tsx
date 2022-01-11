@@ -24,10 +24,10 @@ const TermsPage = () => (
       </p>
       <p>
         Dalam keadaan apa pun {publicRuntimeConfig.SITE_NAME} atau pemasok pihak
-        ketiga (termasuk, tanpa batasan, kerusakan karena kehilangan data atau
-        keuntungan, atau karena gangguan bisnis) yang timbul dari penggunaan
-        atau ketidakmampuan untuk menggunakan materi di situs web{" "}
-        {publicRuntimeConfig.DEFAULT_DOMAIN}, meskipun{" "}
+        ketiga tidak bertanggung jawab atas kerusakan (termasuk, tanpa batasan,
+        kerusakan dan kerugian karena kehilangan data, atau karena gangguan yang
+        timbul dari penggunaan atau ketidakmampuan untuk menggunakan materi di
+        situs web {publicRuntimeConfig.DEFAULT_DOMAIN}, meskipun{" "}
         {publicRuntimeConfig.SITE_NAME} atau perwakilan resmi{" "}
         {publicRuntimeConfig.SITE_NAME} telah diberitahu secara lisan atau
         tertulis tentang kemungkinan kerusakan tersebut. Karena beberapa
@@ -42,16 +42,16 @@ const TermsPage = () => (
         di situs webnya akurat, lengkap, atau terkini.{" "}
         {publicRuntimeConfig.SITE_NAME} dapat sewaktu-waktu mengubah materi yang
         terdapat di situs webnya tanpa pemberitahuan. Namun{" "}
-        {publicRuntimeConfig.SITE_NAME} dtidak membuat komitmen untuk
-        memperbarui materi.
+        {publicRuntimeConfig.SITE_NAME} tidak membuat komitmen untuk memperbarui
+        materi.
       </p>
       <p>
         {publicRuntimeConfig.SITE_NAME} belum meninjau semua situs yang tertaut
         ke situs webnya dan tidak bertanggung jawab atas isi dari situs tertaut
-        tersebut. Dimasukkannya tautan apa pun tidak menyiratkan pengesahan dan
-        segala bentuk "endorsement" untuk situs tertaut oleh{" "}
-        {publicRuntimeConfig.SITE_NAME}. Penggunaan situs web tertaut tersebut
-        merupakan risiko pengguna sendiri.
+        tersebut. Tautan apa pun yang ada di {publicRuntimeConfig.SITE_NAME}{" "}
+        tidak menyiratkan pengesahan dan segala bentuk "endorsement" untuk situs
+        tertaut oleh {publicRuntimeConfig.SITE_NAME}. Penggunaan situs web
+        tertaut tersebut merupakan risiko pengguna sendiri.
       </p>
       <p>
         {publicRuntimeConfig.SITE_NAME} dapat merevisi dokumen persyaratan
