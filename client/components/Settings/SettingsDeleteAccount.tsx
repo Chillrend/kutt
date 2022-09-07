@@ -55,7 +55,9 @@ const SettingsDeleteAccount: FC = () => {
       <H2 mb={4} bold>
         Delete account
       </H2>
-      <Text mb={4}>Hapus akun Anda dari {publicRuntimeConfig.SITE_NAME}.</Text>
+      <Text mb={4}>
+        Delete your account from {publicRuntimeConfig.SITE_NAME}.
+      </Text>
       <Text
         {...label("password")}
         as="label"
@@ -84,11 +86,11 @@ const SettingsDeleteAccount: FC = () => {
       >
         <>
           <H2 mb={24} textAlign="center" bold>
-            Hapus akun?
+            Delete account?
           </H2>
           <Text textAlign="center">
-            Semua data Anda termasuk <Span bold>URL</Span> dan{" "}
-            <Span bold>Statistik URL</Span> akan terhapus.
+            All of your data including your <Span bold>LINKS</Span> and{" "}
+            <Span bold>STATS</Span> will be deleted.
           </Text>
           <RowCenterH mt={44}>
             {loading ? (

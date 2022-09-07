@@ -1,7 +1,6 @@
 import { differenceInMinutes, addMinutes, subMinutes } from "date-fns";
 import { Handler } from "express";
 import passport from "passport";
-import { Issuer, generators } from "openid-client";
 import bcrypt from "bcryptjs";
 import nanoid from "nanoid";
 import uuid from "uuid/v4";
@@ -14,19 +13,8 @@ import * as mail from "../mail";
 import query from "../queries";
 import env from "../env";
 
-const client = async () => {
-  const pnjIssuer = await Issuer.discover("https://auth.pnj.ac.id");
-  return new pnjIssuer.Client({
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
-    redirect_uris: [process.env.REDIRECT_URI],
-    response_types: ["code"],
-    token_endpoint_auth_method: "client_secret_basic"
-  });
-};
-
 const authenticate = (
-  type: "jwt" | "local" | "localapikey" | "sso",
+  type: "jwt" | "local" | "localapikey",
   error: string,
   isStrict = true
 ) =>
@@ -71,66 +59,6 @@ export const apikey = authenticate(
   "API key is not correct.",
   false
 );
-
-export const redirectToSSO: Handler = async (req, res, next) => {
-  const pnjClient = await client();
-
-  const oauth_state = generators.state(16);
-  res.cookie("oauth_state", oauth_state, { httpOnly: true, secure: true });
-
-  const redirect_url = pnjClient.authorizationUrl({
-    scope: "openid",
-    state: oauth_state,
-    code_challenge_method: "S256",
-    response_type: "code"
-  });
-
-  return res.redirect(redirect_url);
-};
-
-export const ssoCallback: Handler = async (req, res, next) => {
-  if (req.query.error !== undefined) {
-    return res.status(500);
-  }
-
-  const pnjClient = await client();
-  const params = pnjClient.callbackParams(req);
-
-  if (req.headers.cookie) {
-    const oauth_state = req.cookies["oauth_state"];
-    const tokenSet = await pnjClient.callback(
-      process.env.FULL_DOMAIN_PROTO + "/api/v2/auth/callback",
-      params,
-      { state: oauth_state }
-    );
-    const userinfo = await pnjClient.userinfo(tokenSet.access_token);
-
-    const user = await query.user.find({ email: userinfo.email });
-    if (user) {
-      req.user = {
-        ...user,
-        admin: utils.isAdmin(user.email)
-      };
-      return next();
-    } else {
-      const salt = await bcrypt.genSalt(12);
-      const password = await bcrypt.hash(uuid(), salt);
-
-      const add_user = await query.user.add({
-        email: userinfo.email,
-        password,
-        verified: true
-      });
-      req.user = {
-        ...add_user,
-        admin: utils.isAdmin(add_user.email)
-      };
-      return next();
-    }
-  } else {
-    return res.status(403);
-  }
-};
 
 export const cooldown: Handler = async (req, res, next) => {
   if (env.DISALLOW_ANONYMOUS_LINKS) return next();
@@ -200,12 +128,6 @@ export const signup: Handler = async (req, res) => {
 export const token: Handler = async (req, res) => {
   const token = utils.signToken(req.user);
   return res.status(200).send({ token });
-};
-
-export const tokenWithRedirect: Handler = async (req, res, next) => {
-  const token = utils.signToken(req.user);
-  res.cookie("token_temp", token, { httpOnly: true });
-  return res.redirect("/auth/oidc");
 };
 
 export const verify: Handler = async (req, res, next) => {

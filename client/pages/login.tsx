@@ -36,11 +36,7 @@ const LoginPage = () => {
   const login = useStoreActions(s => s.auth.login);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
-  const [loading, setLoading] = useState({
-    login: false,
-    signup: false,
-    sso: false
-  });
+  const [loading, setLoading] = useState({ login: false, signup: false });
   const [formState, { email, password, label }] = useFormState<{
     email: string;
     password: string;
@@ -50,14 +46,9 @@ const LoginPage = () => {
     if (isAuthenticated) Router.push("/");
   }, [isAuthenticated]);
 
-  function onSubmit(type: "login" | "signup" | "sso") {
+  function onSubmit(type: "login" | "signup") {
     return async e => {
       e.preventDefault();
-
-      if (type === "sso") {
-        Router.push("/api/v2/auth/redirect");
-      }
-
       const { email, password } = formState.values;
 
       if (loading.login || loading.signup) return null;
@@ -96,7 +87,7 @@ const LoginPage = () => {
         }
       }
 
-      setLoading({ login: false, signup: false, sso: false });
+      setLoading({ login: false, signup: false });
     };
   }
 
@@ -171,22 +162,6 @@ const LoginPage = () => {
                   Sign up
                 </Button>
               )}
-            </Flex>
-            <Flex justifyContent="center">
-              <Button
-                flex="1 1 auto"
-                mt={10}
-                height={[44, 56]}
-                maxWidth="100%"
-                onClick={onSubmit("sso")}
-              >
-                <Icon
-                  name={loading.sso ? "spinner" : "login"}
-                  stroke="white"
-                  mr={2}
-                />
-                Log in dengan SSO PNJ
-              </Button>
             </Flex>
             <Link href="/reset-password">
               <ALink

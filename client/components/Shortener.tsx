@@ -10,12 +10,11 @@ import { Checkbox, Select, TextInput } from "./Input";
 import { Col, RowCenterH, RowCenter } from "./Layout";
 import { useMessage, useCopy } from "../hooks";
 import { removeProtocol } from "../utils";
-import Text, { H1, H4, Span } from "./Text";
+import Text, { H1, Span } from "./Text";
 import { Link } from "../store/links";
 import Animation from "./Animation";
 import { Colors } from "../consts";
 import Icon from "./Icon";
-import { Row } from "redoc";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -41,7 +40,7 @@ const SubmitIconWrapper = styled.div`
 `;
 
 const ShortenedLink = styled(H1)`
-  // cursor: "pointer";
+  cursor: "pointer";
   border-bottom: 1px dotted ${Colors.StatsTotalUnderline};
   cursor: pointer;
 
@@ -73,7 +72,7 @@ const Shortener = () => {
   const [formState, { raw, password, text, select, label }] = useFormState<
     Form
   >(
-    { showAdvanced: false, expire_in: !isAuthenticated ? "60 days" : "" },
+    { showAdvanced: false },
     {
       withIds: true,
       onChange(e, stateValues, nextStateValues) {
@@ -131,10 +130,11 @@ const Shortener = () => {
 
   const title = !link && (
     <H1 fontSize={[25, 27, 32]} light>
-      Buat link Anda{" "}
+      Kutt your links{" "}
       <Span style={{ borderBottom: "2px dotted #999" }} light>
-        pendek!
+        shorter
       </Span>
+      .
     </H1>
   );
 
@@ -184,21 +184,12 @@ const Shortener = () => {
     </Animation>
   );
 
-  const anon_message = link && (
-    <H4>
-      {!isAuthenticated
-        ? "Pengguna anonymous diizinkan membuat link dengan masa berlaku 60 Hari"
-        : ""}
-    </H4>
-  );
-
   return (
     <Col width={800} maxWidth="100%" px={[3]} flex="0 0 auto" mt={4}>
-      <RowCenterH>
+      <RowCenterH mb={[4, 48]}>
         {title}
         {result}
       </RowCenterH>
-      <RowCenterH mb={[4, 48]}>{anon_message}</RowCenterH>
       <Flex
         as="form"
         id="shortenerform"
@@ -210,7 +201,7 @@ const Shortener = () => {
       >
         <TextInput
           {...text("target")}
-          placeholder="Tempel URL panjang Anda"
+          placeholder="Paste your long URL"
           placeholderSize={[16, 17, 18]}
           fontSize={[18, 20, 22]}
           aria-label="target"
@@ -252,7 +243,7 @@ const Shortener = () => {
           }
         })}
         checked={formState.values.showAdvanced}
-        label="Tampilkan opsi tambahan"
+        label="Show advanced options"
         mt={[3, 24]}
         alignSelf="flex-start"
       />
@@ -298,7 +289,7 @@ const Shortener = () => {
               </Text>
               <TextInput
                 {...text("customurl")}
-                placeholder="Custom URL..."
+                placeholder="Custom address..."
                 autocomplete="off"
                 data-lpignore
                 pl={[3, 24]}
@@ -342,11 +333,11 @@ const Shortener = () => {
                 mb={2}
                 bold
               >
-                Kedaluwarsa dalam:
+                Expire in:
               </Text>
               <TextInput
                 {...text("expire_in")}
-                placeholder="2 m/h/d(minutes/hour/days)"
+                placeholder="2 minutes/hours/days"
                 data-lpignore
                 pl={[3, 24]}
                 pr={[3, 24]}
@@ -365,11 +356,11 @@ const Shortener = () => {
                 mb={2}
                 bold
               >
-                Deskripsi:
+                Description:
               </Text>
               <TextInput
                 {...text("description")}
-                placeholder="Deskripsi"
+                placeholder="Description"
                 data-lpignore
                 pl={[3, 24]}
                 pr={[3, 24]}

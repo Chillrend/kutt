@@ -15,7 +15,6 @@ export enum API {
 
 export enum APIv2 {
   AuthLogin = "/api/v2/auth/login",
-  AuthSSORed = "/api/v2/auth/redirect",
   AuthSignup = "/api/v2/auth/signup",
   AuthRenew = "/api/v2/auth/renew",
   AuthResetPassword = "/api/v2/auth/reset-password",

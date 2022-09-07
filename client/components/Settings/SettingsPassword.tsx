@@ -37,9 +37,7 @@ const SettingsPassword: FC = () => {
       formState.clear();
       setMessage(res.data.message, "green");
     } catch (err) {
-      setMessage(
-        err?.response?.data?.error || "Tidak dapat mengubah password."
-      );
+      setMessage(err?.response?.data?.error || "Couldn't update the password.");
     }
     setLoading(false);
   };
@@ -47,14 +45,9 @@ const SettingsPassword: FC = () => {
   return (
     <Col alignItems="flex-start" maxWidth="100%">
       <H2 mb={4} bold>
-        Ganti Password
+        Change password
       </H2>
-      <Text>Masukkan password baru untuk mengganti password lama Anda.</Text>
-      <Text mb={4}>
-        Jika Anda menggunakan SSO untuk login kedalam s.pnj.ac.id. Kami sarankan
-        untuk mengubah password Anda disini jika Anda ingin login menggunakan
-        autentikasi tradisional email dan password
-      </Text>
+      <Text mb={4}>Enter a new password to change your current password.</Text>
       <Text
         {...label("password")}
         as="label"
@@ -62,7 +55,7 @@ const SettingsPassword: FC = () => {
         fontSize={[15, 16]}
         bold
       >
-        Password baru:
+        New password:
       </Text>
       <Flex as="form" onSubmit={onSubmit}>
         <TextInput
@@ -76,7 +69,7 @@ const SettingsPassword: FC = () => {
             }
           })}
           autocomplete="off"
-          placeholder="Password baru.."
+          placeholder="New password..."
           width={[1, 2 / 3]}
           mr={3}
           required

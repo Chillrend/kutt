@@ -37,9 +37,7 @@ const SettingsChangeEmail: FC = () => {
       );
       setMessage(res.data.message, "green");
     } catch (error) {
-      setMessage(
-        error?.response?.data?.error || "Tidak dapat mengirim email konfirmasi."
-      );
+      setMessage(error?.response?.data?.error || "Couldn't send email.");
     }
     setLoading(false);
   };
@@ -47,7 +45,7 @@ const SettingsChangeEmail: FC = () => {
   return (
     <Col alignItems="flex-start" maxWidth="100%">
       <H2 mb={4} bold>
-        Ganti alamat email
+        Change email address
       </H2>
       <Col alignItems="flex-start" onSubmit={onSubmit} width={1} as="form">
         <Flex width={1} flexDirection={["column", "row"]}>
@@ -76,7 +74,7 @@ const SettingsChangeEmail: FC = () => {
               fontSize={[15, 16]}
               bold
             >
-              Alamat email baru:
+              New email address:
             </Text>
             <TextInput
               {...email("changeemailaddress")}
@@ -86,11 +84,6 @@ const SettingsChangeEmail: FC = () => {
             />
           </Col>
         </Flex>
-        <Text mt={10}>
-          Mohon untuk tidak mengubah email Anda jika Anda login menggunakan SSO
-          PNJ. Kami mengaitkan akun s.pnj.ac.id Anda dengan SSO menggunakan
-          Email
-        </Text>
         <Button type="submit" color="blue" mt={[24, 3]} disabled={loading}>
           <Icon name={loading ? "spinner" : "refresh"} mr={2} stroke="white" />
           {loading ? "Sending..." : "Update"}
