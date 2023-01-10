@@ -103,7 +103,7 @@ const Header: FC = () => {
         alignItems={["flex-start", "stretch"]}
       >
         <LogoImage>
-          <a
+          <ALink
             href="/"
             title="Homepage"
             onClick={e => {
@@ -113,7 +113,7 @@ const Header: FC = () => {
           >
             <img src="/images/logo.svg" alt="" />
             {publicRuntimeConfig.SITE_NAME}
-          </a>
+          </ALink>
         </LogoImage>
         {!isMobile && (
           <Flex

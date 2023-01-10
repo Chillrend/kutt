@@ -49,7 +49,7 @@ const TermsPage = () => (
         {publicRuntimeConfig.SITE_NAME} belum meninjau semua situs yang tertaut
         ke situs webnya dan tidak bertanggung jawab atas isi dari situs tertaut
         tersebut. Tautan apa pun yang ada di {publicRuntimeConfig.SITE_NAME}{" "}
-        tidak menyiratkan pengesahan dan segala bentuk "endorsement" untuk situs
+        tidak menyiratkan pengesahan dan segala bentuk &quot;endorsement&quot; untuk situs
         tertaut oleh {publicRuntimeConfig.SITE_NAME}. Penggunaan situs web
         tertaut tersebut merupakan risiko pengguna sendiri.
       </p>

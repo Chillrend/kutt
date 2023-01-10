@@ -726,7 +726,7 @@ const LinksTable: FC = () => {
             </H2>
             <Text textAlign="center">
               Apakah Anda yakin ingin menghapus link{" "}
-              <Span bold>"{removeProtocol(linkToDelete.link)}"</Span>?
+              <Span bold>&quot;{removeProtocol(linkToDelete.link)}&quot;</Span>?
             </Text>
             <Flex justifyContent="center" mt={44}>
               {deleteLoading ? (
