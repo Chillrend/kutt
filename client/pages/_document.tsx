@@ -1,4 +1,4 @@
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 import getConfig from "next/config";
 import React from "react";
@@ -24,7 +24,7 @@ class AppDocument extends Document<Props> {
 
   render() {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <meta
@@ -89,6 +89,7 @@ class AppDocument extends Document<Props> {
             async
             defer
           />
+          <title>s.pnj.ac.id</title>
         </Head>
         <body
           style={{
@@ -100,9 +101,10 @@ class AppDocument extends Document<Props> {
           }}
         >
           <Main />
+          <script defer data-domain="s.pnj.ac.id" src="https://analytics.transformasidigital.org/js/script.js"></script>
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

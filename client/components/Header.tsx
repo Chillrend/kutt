@@ -1,4 +1,4 @@
-import { Flex } from "reflexbox/styled-components";
+import { Flex } from "rebass/styled-components";
 import getConfig from "next/config";
 import React, { FC } from "react";
 import Router from "next/router";
@@ -60,6 +60,7 @@ const Header: FC = () => {
           href="/login"
           title={!DISALLOW_REGISTRATION ? "login / signup" : "login"}
           forButton
+          isNextLink
         >
           <Button height={[32, 40]}>
             {!DISALLOW_REGISTRATION ? "Log in / Sign up" : "Log in"}
@@ -71,7 +72,7 @@ const Header: FC = () => {
   const logout = isAuthenticated && (
     <Li>
       <Link href="/logout">
-        <ALink href="/logout" title="logout" fontSize={[14, 16]}>
+        <ALink href="/logout" title="logout" fontSize={[14, 16]} isNextLink>
           Log out
         </ALink>
       </Link>
@@ -80,7 +81,7 @@ const Header: FC = () => {
   const settings = isAuthenticated && (
     <Li>
       <Link href="/settings">
-        <ALink href="/settings" title="Settings" forButton>
+        <ALink href="/settings" title="Settings" forButton isNextLink>
           <Button height={[32, 40]}>Settings</Button>
         </ALink>
       </Link>
@@ -130,6 +131,7 @@ const Header: FC = () => {
                   href="/report"
                   title="Report URL Scam / Malware"
                   fontSize={[14, 16]}
+                  isNextLink
                 >
                   Report URL Scam / Malware
                 </ALink>
@@ -145,19 +147,6 @@ const Header: FC = () => {
         as="ul"
         style={{ listStyle: "none" }}
       >
-        <Li>
-          <Flex display={["flex", "none"]}>
-            <Link href="/report">
-              <ALink
-                href="/report"
-                title="Report URL Scam / Malware"
-                fontSize={[14, 16]}
-              >
-                Report URL Scam / Malware
-              </ALink>
-            </Link>
-          </Flex>
-        </Li>
         {logout}
         {settings}
         {login}

@@ -9,5 +9,9 @@ module.exports = {
     REPORT_EMAIL: localEnv && localEnv.REPORT_EMAIL,
     DISALLOW_ANONYMOUS_LINKS: localEnv && localEnv.DISALLOW_ANONYMOUS_LINKS,
     DISALLOW_REGISTRATION: localEnv && localEnv.DISALLOW_REGISTRATION
+  },
+  compiler: {
+    // Enables the styled-components SWC transform
+    styledComponents: true
   }
 };
