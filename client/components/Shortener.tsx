@@ -1,6 +1,6 @@
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useFormState } from "react-use-form-state";
-import { Flex } from "reflexbox/styled-components";
+import { Flex } from "rebass/styled-components";
 import React, { useState } from "react";
 import styled from "styled-components";
 import getConfig from "next/config";
@@ -41,7 +41,6 @@ const SubmitIconWrapper = styled.div`
 `;
 
 const ShortenedLink = styled(H1)`
-  // cursor: "pointer";
   border-bottom: 1px dotted ${Colors.StatsTotalUnderline};
   cursor: pointer;
 
@@ -63,9 +62,9 @@ interface Form {
 const defaultDomain = publicRuntimeConfig.DEFAULT_DOMAIN;
 
 const Shortener = () => {
-  const { isAuthenticated } = useStoreState(s => s.auth);
-  const domains = useStoreState(s => s.settings.domains);
-  const submit = useStoreActions(s => s.links.submit);
+  const { isAuthenticated } = useStoreState((s) => s.auth);
+  const domains = useStoreState((s) => s.settings.domains);
+  const submit = useStoreActions((s) => s.links.submit);
   const [link, setLink] = useState<Link | null>(null);
   const [message, setMessage] = useMessage(3000);
   const [loading, setLoading] = useState(false);
@@ -98,7 +97,7 @@ const Shortener = () => {
     setLoading(false);
   };
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setCopied(false);
@@ -241,7 +240,7 @@ const Shortener = () => {
       <Checkbox
         {...raw({
           name: "showAdvanced",
-          onChange: e => {
+          onChange: () => {
             if (!isAuthenticated) {
               setMessage(
                 "You need to log in or sign up to use advanced options."
@@ -279,7 +278,7 @@ const Shortener = () => {
                 width={[1, 210, 240]}
                 options={[
                   { key: defaultDomain, value: "" },
-                  ...domains.map(d => ({
+                  ...domains.map((d) => ({
                     key: d.address,
                     value: d.address
                   }))

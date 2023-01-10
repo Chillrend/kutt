@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
 import { isAfter, subDays, subHours, addMilliseconds } from "date-fns";
-import urlRegex from "url-regex";
+import urlRegex from "url-regex-safe";
 import { promisify } from "util";
 import bcrypt from "bcryptjs";
 import axios from "axios";
@@ -157,7 +157,12 @@ export const editLink = [
     .custom(value => /^[a-zA-Z0-9-_]+$/g.test(value))
     .withMessage("Custom URL tidak valid")
     .custom(value => !preservedUrls.some(url => url.toLowerCase() === value))
-    .withMessage("Anda tidak dapat menggunakan custom URL ini."),
+    .withMessage("Anda tidak bisa menggunakan custom URL ini."),
+  body("password")
+        .optional({ nullable: true, checkFalsy: true })
+        .isString()
+        .isLength({ min: 3, max: 64 })
+        .withMessage("Karakter password harus melebihi 3 karakter dan kurang dari 64 karakter."),
   body("expire_in")
     .optional({ nullable: true, checkFalsy: true })
     .isString()

@@ -4,7 +4,7 @@ import passport from "passport";
 import { Issuer, generators } from "openid-client";
 import bcrypt from "bcryptjs";
 import nanoid from "nanoid";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import axios from "axios";
 
 import { CustomError } from "../utils";
