@@ -89,7 +89,7 @@ class AppDocument extends Document<Props> {
             async
             defer
           />
-          <script defer data-domain="s.pnj.ac.id" src="https://analytics.transformasidigital.org/js/script.js"></script>
+          <script defer data-domain="s.pnj.ac.id" src="https://analytics.upatik.io/js/script.js"></script>
           <title>s.pnj.ac.id</title>
         </Head>
         <body
